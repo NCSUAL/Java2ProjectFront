@@ -18,7 +18,6 @@ class Home extends StatelessWidget {
         width: thisWeight,
         height: thisHeight,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: thisHeight * 0.12,
@@ -34,7 +33,11 @@ class Home extends StatelessWidget {
                 height: 1.2,
               ),
             ),
-            NaverMap()
+            Flexible(
+                child: NaverMap(
+              options: NaverMapViewOptions(
+                  minZoom: 16.3, locationButtonEnable: true),
+            ))
           ],
         ),
       ),
