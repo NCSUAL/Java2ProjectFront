@@ -16,6 +16,6 @@ void main() async {
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NaverMapSdk.instance.initialize(
-      clientId: '', // 클라이언트 ID 설정
+      clientId: '0f9mwavxum', // 클라이언트 ID 설정
       onAuthFailed: (e) => log("네이버맵 인증오류 : $e", name: "onAuthFailed"));
 }

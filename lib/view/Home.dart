@@ -36,7 +36,7 @@ class Home extends StatelessWidget {
             Flexible(
                 child: NaverMap(
               options: NaverMapViewOptions(
-                  minZoom: 16.3, locationButtonEnable: true),
+                  minZoom: 15.5, locationButtonEnable: true),
             ))
           ],
         ),
