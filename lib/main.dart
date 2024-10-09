@@ -18,8 +18,8 @@ void main() async {
         BlocProvider(create: (context) => NaverMapBloc(), lazy: true)
       ],
       child: MaterialApp(
-        home: BlocBuilder<NaverMapBloc, NaverMapBlocState>(
-            builder: (context, state) {
+        home:
+            BlocBuilder<NaverMapBloc, NaverMapState>(builder: (context, state) {
           //현재 상태가 위치 권한 허용 상태가 아니라면
           if (state is RefuseLocationPermissionState) {
             return LocationPermissionDeny();

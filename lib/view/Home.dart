@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:java2front/viewModel/bloc/NaverMapBloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:java2front/viewModel/event/NaverMapBlocState.dart';
 import 'package:java2front/viewModel/state/NaverMapBlocEvent.dart';
 
 class Home extends StatelessWidget {
@@ -20,17 +21,18 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            NaverMap(
-              onMapReady: (NaverMapController controller) {
-                //현재 위치를 받아오기 위해 위치 권한을 먼저 허용 해야 하고
-                //NaverMap이 그려진 다음에 컨트롤러를 초기화 해야함
-                context.read<NaverMapBloc>().add(
-                    RegisterNaverMapControllerEvent(
-                        naverMapController: controller));
-              },
-              options: NaverMapViewOptions(
-                  minZoom: 15.5, locationButtonEnable: true),
-            ),
+            BlocBuilder<NaverMapBloc, NaverMapState>(builder: (context, state) {
+              return NaverMap(
+                options: state.naverMapViewOptions!,
+                onMapReady: (NaverMapController controller) {
+                  //현재 위치를 받아오기 위해 위치 권한을 먼저 허용 해야 하고
+                  //NaverMap이 그려진 다음에 컨트롤러를 초기화 해야함
+                  context.read<NaverMapBloc>().add(
+                      RegisterNaverMapControllerEvent(
+                          naverMapController: controller));
+                },
+              );
+            }),
             Container(
               decoration: ShapeDecoration(
                   color: Colors.white,

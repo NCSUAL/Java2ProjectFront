@@ -6,30 +6,48 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NaverMapBloc extends Bloc<NaverMapBlocEvent, NaverMapBlocState> {
+class NaverMapBloc extends Bloc<NaverMapBlocEvent, NaverMapState> {
   //생성자
-  NaverMapBloc() : super(InitNaverMapBlocState()) {
+  NaverMapBloc() : super(InitNaverMapState()) {
     //위치 권한 이벤트
     on<RequestLocationPermission>(_requestLocationPermission);
 
     //컨트롤러 등록 이벤트
-    on<RegisterNaverMapControllerEvent>(_registerNaverMapControllerEvent);
+    on<RegisterNaverMapControllerEvent>((event, emit) async {
+      emit(RegisterNaverMapControllerState(
+          naverMapController: event.naverMapController,
+          naverMapViewOptions: NaverMapViewOptions(
+              minZoom: 15.5,
+              locationButtonEnable: true,
+              activeLayerGroups: [NLayerGroup.transit])));
+
+      //네이버 지도 + 옵션이 모두 적용된 후 컨트롤러 설정
+      Future.delayed(
+        Duration(milliseconds: 100),
+        () async {
+          // face: 현재 위치와 방향을 표시하고 지도가 따라감
+          await event.naverMapController
+              .setLocationTrackingMode(NLocationTrackingMode.face);
+        },
+      );
+    });
 
     //블록이 생성될 때 해당 이벤트 실행 (lazy 옵션)
     add(RequestLocationPermission());
   }
 
   //컨트롤러 등록 이벤트
-  _registerNaverMapControllerEvent(event, emit) async {
-    //컨트롤러 등록
-    emit(RegisterNaverMapControllerState(
-        naverMapController: event.naverMapController));
-
-    // 컨트롤러 설정
-    // face: 현재 위치와 방향을 표시하고 지도가 따라감
-    event.naverMapController
-        .setLocationTrackingMode(NLocationTrackingMode.face);
-  }
+  // _registerNaverMapControllerEvent(event, emit) async {
+  //   // 컨트롤러 설정
+  //   // face: 현재 위치와 방향을 표시하고 지도가 따라감
+  //   event.naverMapController
+  //       .setLocationTrackingMode(NLocationTrackingMode.face);
+  //
+  //   //컨트롤러 등록
+  //   emit(RegisterNaverMapControllerState(
+  //       naverMapController: event.naverMapController,
+  //       nlayerGroup: [NLayerGroup.transit]));
+  // }
 
   //위치 권한 이벤트 메소드
   _requestLocationPermission(event, emit) async {
